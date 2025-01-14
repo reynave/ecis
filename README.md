@@ -5,9 +5,9 @@ Global setting  in  **.env** (base on your server, port and database)
 
 ### Prerequisites
 
-1. **Install Node.js v20.x atau lebih**  
+1. **Install Node.js v22.x or higher with LTS requirement**  
    [Download Node.js](https://nodejs.org/en)
-2. ## install ODBC for nodejs connection to SQL SERVER
+2. **install ODBC for nodejs connection to SQL SERVER**
    SQL_DRIVE = ODBC Driver 17 for SQL Server
    google or [ODBC ver 17 SQL SERVER ](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16)
 
