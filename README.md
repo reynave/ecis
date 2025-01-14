@@ -3,7 +3,7 @@
 Here are the steps to install and run this application.
 Global setting  in  **.env** (base on your server, port and database)
 
-### Installation
+### Prerequisites
 
 1. **Install Node.js v20.x atau lebih**  
    [Download Node.js](https://nodejs.org/en)
