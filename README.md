@@ -6,11 +6,15 @@ Global setting  in  **.env** (base on your server, port and database)
 
 1. **Install Node.js v20.x atau lebih**  
    [Download Node.js](https://nodejs.org/en)
+2. ## install ODBC for nodejs connection to SQL SERVER
+   SQL_DRIVE = ODBC Driver 17 for SQL Server
+   google or [ODBC ver 17 SQL SERVER ](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver16)
 
 
 # GIT PULL WITH GITHUB
-2. **Install GitHub Command Line**  
+1. **Install GitHub Command Line**  
    [Download GitHub CLI](https://cli.github.com/)
+
 
 ## WITH GITHUB
 Enter your project folder 
@@ -21,7 +25,7 @@ Open Command Line(cmd) in windows
    ```bash
    git clone https://github.com/reynave/ecis.git
 
-## MANUAL DONWLOAD (without github)
+## OR MANUAL DONWLOAD (without github)
 1. donwload 
 2. extrax *.zip
 3. npm install
