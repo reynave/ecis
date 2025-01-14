@@ -16,7 +16,7 @@ Global setting  in  **.env** (base on your server, port and database)
    [Download GitHub CLI](https://cli.github.com/)
 
 
-## WITH GITHUB
+## A. WITH GITHUB
 Enter your project folder 
 Open Command Line(cmd) in windows
 
@@ -25,7 +25,7 @@ Open Command Line(cmd) in windows
    ```bash
    git clone https://github.com/reynave/ecis.git
 
-## OR MANUAL DONWLOAD (without github)
+## B. OR MANUAL DONWLOAD (without github)
 1. donwload 
 2. extrax *.zip
 3. npm install
@@ -52,7 +52,7 @@ node index.js
 ### for production always using **PM2**
 
 
-## Update patch version (jika ada)
+### Update patch code only using github cmd (B)
 ```
 git pull
 ```
