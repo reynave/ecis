@@ -53,21 +53,28 @@ router.get('/test', async (req, res) => {
 
 
 router.get('/billTotalRange/', async (req, res) => {
+   const brand = 'IK';
+   const tabs = 'TA';
    try {
       console.log(req.query);
       const get = {}
       const q = `
-         select t1.*, o.OutletDesc_1 from (
-         select   c.OutletID , sum( p.PaidAmount) as 'amount'
+         SELECT t1.*, o.OutletDesc_1 ,LEFT( o.OutletDesc_1, CHARINDEX(' ',  o.OutletDesc_1) - 1) AS 'brand'
+         from (
+         SELECT   c.OutletID , sum( p.PaidAmount) as 'amount', '${tabs}' as 'tabs'
          from OP_MonthlyCheck as c
          left join OP_MonthlyCheckPayment as p 
          ON	c.CheckID = p.CheckID AND 
             c.OutletID = p.OutletID AND
             c.date = p.date
-         where c.date between '2024-01-01' and '2024-01-01' and c.TableNo != ''
+         where c.date between '2024-01-01' and '2024-01-01' and c.TableNo like '%${tabs}%' 
          group by  c.OutletID
          ) as t1
          left join Outlet_Profile as o on o.Outlet_ID = t1.OutletID
+         where LEFT( o.OutletDesc_1, CHARINDEX(' ',  o.OutletDesc_1) - 1) = '${brand}'
+         order by t1.amount asc
+         ;  
+ 
       `; 
       // Jalankan query pertama
       const items = await runQuery(q); 
