@@ -1,28 +1,38 @@
 # EPIXLOG Report
 
-Selamat datang di proyek EPIXLOG Report. Berikut adalah langkah-langkah untuk menginstal dan menjalankan aplikasi ini.
-setting server IP di **.env** (sudah di setting sesuai server)
+Here are the steps to install and run this application.
+Global setting  in  **.env** (base on your server, port and database)
 ## Prerequisites
 
 1. **Install Node.js v20.x atau lebih**  
    [Download Node.js](https://nodejs.org/en)
 
+
+# GIT PULL WITH GITHUB
 2. **Install GitHub Command Line**  
    [Download GitHub CLI](https://cli.github.com/)
 
-## Instalasi
-Masuk folder project anda untuk seterusnya 
-Buka Command Line(cmd) di windows 
+## WITH GITHUB
+Enter your project folder 
+Open Command Line(cmd) in windows
 
 1. **Clone repositori**  
-   Jalankan perintah berikut di folder proyek Anda:
+   Run the following command in your project folder:
    ```bash
-   git clone https://github.com/reynave/epixlog-report.git
+   git clone https://github.com/reynave/ecis.git
 
-2. ```bash 
+## MANUAL DONWLOAD (without github)
+1. donwload 
+2. extrax *.zip
+3. npm install
+
+
+# INSTALASI 
+
+1. ```bash 
    npm install
 
-3. ```bash 
+2. ```bash 
    npm i nodemon
 
 ## Run Server and App
@@ -30,18 +40,17 @@ Buka Command Line(cmd) di windows
 ```
 nodemon index.js
 ```
-atau 
+or 
 ```
 node index.js
 ```
 
-jika ingin run selalu di dalam background bisa dengan **PM2**
+### for production always using **PM2**
 
-
-Setelah berhasil jalankan http://localhost:3000/ 
-(setting port ada di **.env**)
 
 ## Update patch version (jika ada)
 ```
 git pull
 ```
+
+
