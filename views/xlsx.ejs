@@ -58,29 +58,28 @@
       });
       var digit = 2;
       let items = [];
-      let exlsJson = [];
-      let exportFinal = {};
+      let exlsJson = []; 
       function currency(val) {
          return val == null ? 0 : formatter.format(val.toFixed(digit)).replace("IDR", "");
       } 
       $(document).ready(function () {
-         console.log("MASUK");
-         exlsJson.push(exportFinal);
-         exportJsonToExcel();
-         // $.ajax({
-         //    type: 'GET',
-         //    url: base_api + 'report/result',  
-         //    data: getParam,
-         //    dataType: 'json',
-         //    success: function (data) { 
-         //       console.log(data);  
-              
-         //    },
-         //    error: function (err) {
-         //       console.log(err);
-         //       $('#loading').html("<strong class='text-danger'>ERROR DB / DB NOT FOUND</strong>");
-         //    }
-         // });
+         console.log("MASUK"); 
+       
+         $.ajax({
+            type: 'GET',
+            url: base_api + 'report/billTotalRange',  
+            data: getParam,
+            dataType: 'json',
+            success: function (data) { 
+               console.log(data);    
+               exlsJson = data['items'];
+               exportJsonToExcel();
+            },
+            error: function (err) {
+               console.log(err);
+               $('#loading').html("<strong class='text-danger'>ERROR DB / DB NOT FOUND</strong>");
+            }
+         });
 
       });
 

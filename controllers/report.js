@@ -57,11 +57,12 @@ router.get('/billTotalRange/', async (req, res) => {
    const tabs = 'TA';
    const startDate = '2024-01-01';
    const endDate = '2024-01-01';
+   const data = [];
    try {
       console.log(req.query);
       const get = {}
       const q = `
-         SELECT t1.*, o.OutletDesc_1 ,LEFT( o.OutletDesc_1, CHARINDEX(' ',  o.OutletDesc_1) - 1) AS 'brand', '' as 'index'
+         SELECT t1.*, o.OutletDesc_1 ,LEFT( o.OutletDesc_1, CHARINDEX(' ',  o.OutletDesc_1) - 1) AS 'brand', '' as 'indexOfQtyValueAmount'
          from (
          SELECT   c.OutletID , count(c.CheckId) as 'qty', sum( p.PaidAmount) as 'amount', '${tabs}' as 'tabs'
          from OP_MonthlyCheck as c
@@ -77,28 +78,90 @@ router.get('/billTotalRange/', async (req, res) => {
          order by t1.amount asc
       `;
       const items = await runQuery(q);
-   
+
       const qtyValueAmount = [];
       let temp = 0;
-      for(let i = 100000; i <= items[items.length-1]['amount']; i+= 50000){
+      for (let i = 100000; i <= items[items.length - 1]['amount']; i += 50000) {
          qtyValueAmount.push(i);
-         temp = i+50000;
+         temp = i + 50000;
+         // let name = (i/1000).toString()+"k";
+         // arrayQtyValueAmount.push({
+         //    [name] : 0
+         // }); 
+
       }
       qtyValueAmount.push(temp);
 
-      for(let i = 0; i < items.length; i++){
-         items[i]['index'] = i;
-          // for here check posisi i
 
 
+      const arrayQtyValueAmount = [];
+      let keys = qtyValueAmount;
+      let i = 0;
+      let dynamicObject = keys.reduce((obj, key) => {
+         let temp = '';
+
+         if(i>0){
+            if(qtyValueAmount[i+1]){
+               temp = '-'+(qtyValueAmount[i+1]-1000)/1000+'K';
+            } 
+         }
+         obj[(key/1000)+ 'K' +temp ] = 0; // Assign nilai dinamis, misal `i`
+         i++;
+         return obj;
+      }, {});
+      arrayQtyValueAmount.push(dynamicObject);
+
+
+    
+
+      for (let i = 0; i < items.length; i++) {
+
+         for (let n = 0; n < qtyValueAmount.length; n++) {
+            if (items[i]['amount'] > qtyValueAmount[n] && items[i]['amount'] <= qtyValueAmount[n + 1]) {
+               
+               let temp = '';
+               if(n>0){
+                  if(qtyValueAmount[n+1]){
+                     temp = '-'+(qtyValueAmount[n+1]-1000)/1000+'K';
+                  } 
+               }
+
+
+               items[i]['indexOfQtyValueAmount'] = n;
+               items[i]['qtyValueAmount'] = (qtyValueAmount[n]/1000)+"K"+temp;
+               
+            }
+            else if (items[i]['amount'] <= qtyValueAmount[0]) {
+               items[i]['indexOfQtyValueAmount'] = 0;
+               items[i]['qtyValueAmount'] = (qtyValueAmount[0]/1000)+"K";
+            }
+         } 
+         data.push({...items[i], ...arrayQtyValueAmount[0]} ); 
+        // data.push({...items[i], ...{qtyValueAmount:arrayQtyValueAmountObj}} ); 
+         
       }
-      
+
+      // let haha = [...items[i], ...arrayQtyValueAmount[0]];
+      // console.log( {...items[i], ...arrayQtyValueAmount[0]}  );
+
+
+      console.log(data.length);
+
+      i = 0;
+      data.forEach(el => {
+         data[i][el['qtyValueAmount']] = 1;
+         i++;
+         
+      });   
 
       res.json({
          error: false,
          // get: get, 
+         // arrayQtyValueAmount : arrayQtyValueAmount[0],
          qtyValueAmount: qtyValueAmount,
-         items: items,
+         //  items: items,
+        // arrayQtyValueAmountObj: arrayQtyValueAmountObj,
+         data: data,
 
       });
    } catch (err) {

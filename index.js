@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
     res.render('index',locals);
 });
 
-app.get('/xlsx.html', (req, res) => {
+app.get('/xlsx', (req, res) => {
     // fs.readFile(__dirname + '/public/table.html', 'utf8', (err, text) => {
     //     res.send(text);
     // });
