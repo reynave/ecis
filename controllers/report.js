@@ -62,9 +62,13 @@ router.get('/billTotalRange/', async (req, res) => {
       console.log(req.query);
       const get = {}
       const q = `
-         SELECT t1.*, o.OutletDesc_1 ,LEFT( o.OutletDesc_1, CHARINDEX(' ',  o.OutletDesc_1) - 1) AS 'brand', '' as 'indexOfQtyValueAmount'
+         SELECT t1.*, 
+         LEFT( o.OutletDesc_1, CHARINDEX(' ',  o.OutletDesc_1) - 1) AS 'Brand',  
+         SUBSTRING(o.OutletDesc_1, CHARINDEX('-', o.OutletDesc_1) + 1, LEN(o.OutletDesc_1)) AS 'Outlet',
+
+         '' as 'indexOfQtyValueAmount'
          from (
-         SELECT   c.OutletID , count(c.CheckId) as 'qty', sum( p.PaidAmount) as 'amount', '${tabs}' as 'tabs'
+         SELECT   c.OutletID , count(c.CheckId) as 'qty', sum( p.PaidAmount) as 'amount'
          from OP_MonthlyCheck as c
          left join OP_MonthlyCheckPayment as p
          ON	c.CheckID = p.CheckID AND
@@ -142,26 +146,53 @@ router.get('/billTotalRange/', async (req, res) => {
       }
 
       // let haha = [...items[i], ...arrayQtyValueAmount[0]];
-      // console.log( {...items[i], ...arrayQtyValueAmount[0]}  );
-
-
+      // console.log( {...items[i], ...arrayQtyValueAmount[0]}  ); 
       console.log(data.length);
 
       i = 0;
       data.forEach(el => {
-         data[i][el['qtyValueAmount']] = 1;
-         i++;
-         
+         data[i][el['qtyValueAmount']] = el['amount'];
+         i++; 
       });   
+
+      const sheet = [];
+
+      data.sort((a, b) => {
+         if (a.Outlet < b.Outlet) {
+           return -1;  // a lebih kecil daripada b
+         }
+         if (a.Outlet > b.Outlet) {
+           return 1;   // b lebih kecil daripada a
+         }
+         return 0;       // a dan b sama
+       });
+
+      const finalData = data;
+ 
+      finalData.forEach(el => {
+         delete  el.OutletID; 
+         delete  el.amount; 
+         delete  el.indexOfQtyValueAmount; 
+         delete  el.qtyValueAmount; 
+         delete  el.qty;   
+      });  
+
+      sheet.push({
+         name : "Check Bill Take Away",
+         data : finalData,
+      });
+
+    
 
       res.json({
          error: false,
          // get: get, 
          // arrayQtyValueAmount : arrayQtyValueAmount[0],
-         qtyValueAmount: qtyValueAmount,
+        // qtyValueAmount: qtyValueAmount,
          //  items: items,
         // arrayQtyValueAmountObj: arrayQtyValueAmountObj,
-         data: data,
+        // data: data,
+         sheet : sheet
 
       });
    } catch (err) {

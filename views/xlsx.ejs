@@ -17,14 +17,14 @@
 
 <body>
    <div class="container-fluid">
-     
+
       <div class="row">
 
-         <div class="col-12">  
+         <div class="col-12">
             <div class="p-5 text-center" id="loading">
                <div>
                   <img src="./Animation - 1729584499834.gif" width="100">
-               </div> 
+               </div>
                <div> Loading...</div>
             </div>
          </div>
@@ -58,21 +58,21 @@
       });
       var digit = 2;
       let items = [];
-      let exlsJson = []; 
+      let sheetData = [];
       function currency(val) {
          return val == null ? 0 : formatter.format(val.toFixed(digit)).replace("IDR", "");
-      } 
+      }
       $(document).ready(function () {
-         console.log("MASUK"); 
-       
+         console.log("MASUK");
+
          $.ajax({
             type: 'GET',
-            url: base_api + 'report/billTotalRange',  
+            url: base_api + 'report/billTotalRange',
             data: getParam,
             dataType: 'json',
-            success: function (data) { 
-               console.log(data);    
-               exlsJson = data['items'];
+            success: function (data) {
+               console.log(data);
+               sheetData = data['sheet'];
                exportJsonToExcel();
             },
             error: function (err) {
@@ -83,29 +83,22 @@
 
       });
 
-      function tbody() {
-            let temp = {
-               no: 12,
-               Material_ID: 'haha', 
-            } 
-            exlsJson.push(temp);
-      }
-     
- 
-  
+
+
+
+
 
       function exportJsonToExcel() {
-         // Create a new workbook
-         tbody();
+         // Create a new workbook 
          const workbook = XLSX.utils.book_new();
 
-         // Convert JSON data to a worksheet
-         const worksheet = XLSX.utils.json_to_sheet(exlsJson);
+       
 
          // Append the worksheet to the workbook
-         XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+         XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(sheetData[0]['data']) , sheetData[0]['name']);
 
-         let nameFile = urlParams.get('year') + '_' + urlParams.get('month') + '_' + urlParams.get('db') + ".xlsx";
+         //let nameFile = urlParams.get('year') + '_' + urlParams.get('month') + '_' + urlParams.get('db') + ".xlsx";
+         let nameFile = "test1.xlsx";
 
          // Export the workbook as an Excel file
          XLSX.writeFile(workbook, nameFile);
