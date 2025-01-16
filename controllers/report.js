@@ -76,7 +76,7 @@ router.get('/billTotalRange/', async (req, res) => {
          let whereTabs = tabs[t]['tab'] != '' ? ` and c.TableNo like '%${tabs[t]['tab']}%'` : '';
 
          let q = `
-         SELECT top 2 t1.*, 
+         SELECT t1.*, 
          '${OutletGroup[0]['OutletGroup_Desc1']}' AS 'Brand',  
          SUBSTRING(o.OutletDesc_1, CHARINDEX('-', o.OutletDesc_1) + 1, LEN(o.OutletDesc_1)) AS 'Outlet',
 
