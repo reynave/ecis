@@ -28,9 +28,7 @@ Open Command Line(cmd) in windows
 ## B. OR MANUAL DONWLOAD (without github)
 1. donwload 
 2. extrax *.zip
-3. npm install
-
-
+ 
 # INSTALASI 
 
 1. ```bash 

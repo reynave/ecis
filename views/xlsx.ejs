@@ -44,21 +44,18 @@
       var urlParams = new URLSearchParams(window.location.search);
 
       const getParam = {
-         month: urlParams.get('month'),
-         year: urlParams.get('year'),
-         db: urlParams.get('db'),
+         startDate: '2024-01-01',
+         brand: 'IK',
+        // db: urlParams.get('db'),
       }
-
-      $('#month').html(getParam['month']);
-      $('#year').html(getParam['year']);
-
+ 
       const formatter = new Intl.NumberFormat('en-US', {
          style: 'currency',
          currency: 'IDR',
       });
       var digit = 2;
       let items = [];
-      let sheetData = [];
+      let sheetData = []; 
       function currency(val) {
          return val == null ? 0 : formatter.format(val.toFixed(digit)).replace("IDR", "");
       }
@@ -74,6 +71,7 @@
                console.log(data);
                sheetData = data['sheet'];
                exportJsonToExcel();
+               window.close();
             },
             error: function (err) {
                console.log(err);
@@ -94,11 +92,14 @@
 
        
 
-         // Append the worksheet to the workbook
-         XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(sheetData[0]['data']) , sheetData[0]['name']);
+         // Append the worksheet to the workbook 
+         for(let i= 0; i < sheetData.length; i++){
+            XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(sheetData[i]['data']) , sheetData[i]['name']);
 
+         }
+      
          //let nameFile = urlParams.get('year') + '_' + urlParams.get('month') + '_' + urlParams.get('db') + ".xlsx";
-         let nameFile = "test1.xlsx";
+         let nameFile = "Bill Total Range Report .xlsx";
 
          // Export the workbook as an Excel file
          XLSX.writeFile(workbook, nameFile);
