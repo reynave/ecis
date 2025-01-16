@@ -115,10 +115,10 @@ router.get('/billTotalRange/', async (req, res) => {
 
             if (i > 0) {
                if (qtyValueAmount[i + 1]) {
-                  temp = '-' + (qtyValueAmount[i + 1] - 1000) / 1000 + 'K';
+                  temp = '-' + ((qtyValueAmount[i + 1] - 1000) / 1000).toLocaleString('id-ID') + 'K';
                }
             }
-            obj[(key / 1000) + 'K' + temp] = 0; // Assign nilai dinamis, misal `i`
+            obj[(key / 1000).toLocaleString('id-ID') + 'K' + temp] = 0; // Assign nilai dinamis, misal `i`
             i++;
             return obj;
          }, {});
@@ -135,18 +135,18 @@ router.get('/billTotalRange/', async (req, res) => {
                   let temp = '';
                   if (n > 0) {
                      if (qtyValueAmount[n + 1]) {
-                        temp = '-' + (qtyValueAmount[n + 1] - 1000) / 1000 + 'K';
+                        temp = '-' + ((qtyValueAmount[n + 1] - 1000) / 1000).toLocaleString('id-ID') + 'K';
                      }
                   }
 
 
                   items[i]['indexOfQtyValueAmount'] = n;
-                  items[i]['qtyValueAmount'] = (qtyValueAmount[n] / 1000) + "K" + temp;
+                  items[i]['qtyValueAmount'] = (qtyValueAmount[n] / 1000).toLocaleString('id-ID') + "K" + temp;
 
                }
                else if (items[i]['amount'] <= qtyValueAmount[0]) {
                   items[i]['indexOfQtyValueAmount'] = 0;
-                  items[i]['qtyValueAmount'] = (qtyValueAmount[0] / 1000) + "K";
+                  items[i]['qtyValueAmount'] = (qtyValueAmount[0] / 1000).toLocaleString('id-ID') + "K";
                }
             }
             data.push({ ...items[i], ...arrayQtyValueAmount[0] });

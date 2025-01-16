@@ -46,16 +46,16 @@
       const getParam = {
          startDate: '2024-01-01',
          brand: 'IK',
-        // db: urlParams.get('db'),
+         // db: urlParams.get('db'),
       }
- 
+
       const formatter = new Intl.NumberFormat('en-US', {
          style: 'currency',
          currency: 'IDR',
       });
       var digit = 2;
       let items = [];
-      let sheetData = []; 
+      let sheetData = [];
       function currency(val) {
          return val == null ? 0 : formatter.format(val.toFixed(digit)).replace("IDR", "");
       }
@@ -71,6 +71,7 @@
                console.log(data);
                sheetData = data['sheet'];
                exportJsonToExcel();
+               $("#loading").html("Finish");
                window.close();
             },
             error: function (err) {
@@ -89,15 +90,59 @@
       function exportJsonToExcel() {
          // Create a new workbook 
          const workbook = XLSX.utils.book_new();
+         let worksheet = null;
 
-       
+         const formatCurrencyForColumns = (worksheet, excludeColumns = 2) => {
+            const range = XLSX.utils.decode_range(worksheet["!ref"]); // Dapatkan range data
+
+            for (let col = excludeColumns; col <= range.e.c; col++) { // Mulai dari kolom ke-3
+               for (let row = range.s.r + 1; row <= range.e.r; row++) { // Lewati header
+                  const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                  const cell = worksheet[cellAddress];
+                  if (cell && typeof cell.v === "number") { // Pastikan nilai adalah angka
+                     cell.z = "#,##0"; // Format uang dengan pemisah ribuan
+                  }
+               }
+            }
+         };
+
+         const calculateColumnWidths = (data, startColumn = 2) => {
+            const keys = Object.keys(data[0]); // Mendapatkan nama kolom dari objek pertama
+            const columnWidths = Array(startColumn - 1).fill({ wch: 25 }); // Placeholder untuk kolom sebelum C 
+            keys.forEach((key) => {
+               const maxLength = Math.max(
+                  key.length, // Panjang nama kolom
+                  ...data.map(row => (row[key] ? row[key].toString().length : 0)) // Panjang data di kolom tersebut
+               );
+               columnWidths.push({ wch: 15 }); // Tambahkan padding untuk estetika
+            });
+
+            return columnWidths;
+         };
 
          // Append the worksheet to the workbook 
-         for(let i= 0; i < sheetData.length; i++){
-            XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(sheetData[i]['data']) , sheetData[i]['name']);
+         for (let i = 0; i < sheetData.length; i++) {
+            worksheet = XLSX.utils.json_to_sheet(sheetData[i]['data']);
+
+
+            const headerCell = worksheet['A1']; // Misal A1 adalah sel header pertama
+            if (headerCell) {
+               worksheet['A1'].s = {
+                  font: { bold: true }, // Bold
+                  fill: {
+                     fgColor: { rgb: "FFFF00" } // Warna latar belakang kuning
+                  }
+               };
+            }
+
+
+            formatCurrencyForColumns(worksheet, 2);
+            worksheet["!cols"] = calculateColumnWidths(sheetData[i]['data'], 3);
+
+            XLSX.utils.book_append_sheet(workbook, worksheet, sheetData[i]['name']);
 
          }
-      
+
          //let nameFile = urlParams.get('year') + '_' + urlParams.get('month') + '_' + urlParams.get('db') + ".xlsx";
          let nameFile = "Bill Total Range Report .xlsx";
 
@@ -106,7 +151,7 @@
       }
 
       // Event listener for the export button
-      document.getElementById("export-btn").addEventListener("click", exportJsonToExcel);
+      // document.getElementById("export-btn").addEventListener("click", exportJsonToExcel);
    </script>
 </body>
 
